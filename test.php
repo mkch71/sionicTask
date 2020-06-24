@@ -1,11 +1,17 @@
 <?
   #h&4%BwxW;
   header('Content-type: text/html; charset=utf-8');
-  $directory = "data/";
+  set_time_limit(0);
+ // ini_set('session.gc_maxlifetime', 14400);
+  $directory = $argv[1];
+  //$directory = "data/";
   $arrFiles = array_diff(scandir($directory), array('..', '.'));
   sort($arrFiles);
   require_once("db.php");
   require_once("translit.php");
+
+  //exit(var_dump($argv));
+  
   for($i=0; $i <= (count($arrFiles)/ 2)-1; $i++){
     importXML($directory . $arrFiles[$i]);
     offersXML($directory . $arrFiles[$i+count($arrFiles)/ 2]);
@@ -51,7 +57,7 @@
       //echo('<br>');
       $code=trim($item->Код);
       echo( $city." Import: ".$code.PHP_EOL);
-      $result = $mysqli->query("SELECT * FROM `taskitems` WHERE `code`='$code)'");
+      $result = $mysqli->query("SELECT * FROM `taskitems` WHERE `code`='$code'");
       $result = $result->fetch_assoc();
       if(isset($result)){
         $result = $mysqli->query("UPDATE `taskitems` SET `name`='$item->Наименование',`code`='$code',`weight`='$item->Вес',`usage`='$usage' WHERE `code`='$code'");
